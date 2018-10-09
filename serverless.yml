@@ -14,7 +14,7 @@
 plugins:
   - serverless-python-requirements
 
-service: meetuptools-serverless # NOTE: update this with your service name
+service: slack-meetup-app # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -58,7 +58,7 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  stats:
+  meetuptools:
     handler: meetuptools.handler
     events:
       - http:

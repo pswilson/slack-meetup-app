@@ -1,7 +1,13 @@
+import logging
+
 import requests
 
 import meetup
 import config
+
+# Intializations that are not specific to each run
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 #
 # Membership Stats
@@ -22,10 +28,12 @@ def get_group_info(group_url):
     request_url = '{}/{}'.format(meetup.api_base, group_url)
     r = requests.get(request_url)
     if r.status_code != 200:
+        # TODO: Implement on a better error handling approach
         if r.status_code == 429:
-            print('Rate limited: {}'.format(r.text()))
+            logger.error('Rate limited: {}'.format(r.text()))
         else:
-            print('Error fetching data: {}'.format(r.status_code))
+            logger.error('Error fetching data: {}'.format(r.status_code))
+        return None
 
     return r.json()
 

@@ -1,7 +1,13 @@
+import logging
+
 import requests
 
 import meetup
 import config
+
+# Intializations that are not specific to each run
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 #
 # Next Event(s)
@@ -26,10 +32,12 @@ def next_group_event(group_url):
     request_url = '{}/{}/{}'.format(meetup.api_base, group_url, meetup.events_api_path)
     r = requests.get(request_url, params=filter_params)
     if r.status_code != 200:
+        # TODO: Implement on a better error handling approach
         if r.status_code == 429:
-            print('Rate limited: {}'.format(r.text()))
+            logger.error('Rate limited: {}'.format(r.text()))
         else:
-            print('Error fetching data: {}'.format(r.status_code))
+            logger.error('Error fetching data: {}'.format(r.status_code))
+        return None
 
     events = r.json()
     if len(events) == 0:
