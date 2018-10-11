@@ -64,6 +64,8 @@ def format_event(event):
 
 
 def next_event(args):
+    resp = {}
+
     all_events = {}
     for url_name in config.group_urls:
         event = next_group_event(url_name)
@@ -84,7 +86,11 @@ def next_event(args):
     else:
         msg_text = 'No upcoming events'
 
-    return msg_text
+    # Quick hack since we've changed commands to return a dictionary (slack message formatting info)
+    # Revist to complete output formatting cleanup
+    resp['text'] = msg_text
+
+    return resp
 
 
 def help_cmd():

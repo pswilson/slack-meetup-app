@@ -43,7 +43,6 @@ Once all the pieces are in place you can use the command like other Slack / comm
 - Add logging
 - Better signing secret management
 - Command Enhancements
-  - implement help for the main command and sub-commands
   - show unique member counts across groups
   - show unique rsvp counts across concurrent events
   - allow setting a default Meetup group per Slack channel
