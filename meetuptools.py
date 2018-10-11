@@ -14,11 +14,13 @@ logger.setLevel(logging.INFO)
 # General help
 
 def general_help(args):
-    return 'Available commands: {}.'.format(', '.join(cmd_handlers.keys()))
+    resp = {
+        'text': 'Available commands: {}.'.format(', '.join(cmd_handlers.keys()))
+    }
+    return resp
 
 
 def help_help():
-    # TODO: Should the help be <cmd> help or help <cmd> ??
     return 'For help on a specific command enter: <cmd> help'
 
 
@@ -60,10 +62,10 @@ def handler(event, context):
 
         return response
 
-    body_text = ''
     data = []
     cmd = ''
     args = []
+    resp_body = {}
 
     if 'body' in event:
         data = parse_qs(event['body'])
@@ -77,24 +79,21 @@ def handler(event, context):
         logger.info('Received command \'{}\' with args {}'.format(cmd, args))
         if len(args) > 0 and args[0] == 'help':
             # Get the command specific help
-            body_text += cmd_handlers[cmd][1]()
+            resp_body['text'] = cmd_handlers[cmd][1]()
         else:
             # Run the requested command and pass any additional args
-            body_text += cmd_handlers[cmd][0](args)
+            resp_body = cmd_handlers[cmd][0](args)
     else:
         # We don't know how to do what the user wants
-        body_text += 'Command not recognized. Try one of ({}).'.format('|'.join(cmd_handlers.keys()))
+        resp_body['text'] = 'Command not recognized. Try one of ({}).'.format('|'.join(cmd_handlers.keys()))
 
     # TODO: Encode body text (specifically &, <, and >)
 
-    body = {
-        'response_type': 'in_channel',
-        'text': body_text
-    }
+    resp_body['response_type'] = 'in_channel'
 
     response = {
         'statusCode': 200,
-        'body': json.dumps(body)
+        'body': json.dumps(resp_body)
     }
 
     return response
