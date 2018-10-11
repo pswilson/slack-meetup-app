@@ -65,7 +65,7 @@ def membership_stats(args):
         ]
     }
 
-    for url_name in config.group_urls:
+    for url_name in sorted(config.group_urls):
         group_info = get_group_info(url_name)
         resp['attachments'][0]['fields'] += (format_group(group_info))
 
