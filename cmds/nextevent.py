@@ -97,7 +97,8 @@ def next_event(args):
     resp = {
         'attachments': [
             {
-                'pretext': 'Next:'
+                'mrkdwn_in': ['pretext'],
+                'pretext': '*Next:*'
             }
         ]
     }
@@ -119,7 +120,10 @@ def next_event(args):
     if len(sorted_times) > 0:
         resp['attachments'] += format_events(all_events[sorted_times[0]], format_event)
         if len(sorted_times) > 1:
-            resp['attachments'].append({'pretext': 'Upcoming:'})
+            resp['attachments'].append({
+                'mrkdwn_in': ['pretext'],
+                'pretext': '*Upcoming:*'
+            })
             resp['attachments'] += format_events(all_events[sorted_times[1]], format_event_short)
     else:
         resp['attachments'].append({'text': 'No upcoming events scheduled'})
