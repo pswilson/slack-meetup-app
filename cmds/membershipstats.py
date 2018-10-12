@@ -16,24 +16,24 @@ cmd_name = 'stats'
 
 
 def format_group(group):
-    group_fields = []
-
     # If we have a group to work with ...
     # Send back an array of two fields - name/link, membership count
     # These two fields end up as a row in the output
     if group:
-        group_fields += [{
-            'value': '<{}|{}>'.format(group['link'], group['name']),
-            'short': True
-        }]
-        group_fields += [{
-            'value': '{} members'.format(group['members']),
-            'short': True
-        }]
+        group_fields = [
+            {
+                'value': '<{}|{}>'.format(group['link'], group['name']),
+                'short': True
+            },
+            {
+                'value': '{} members'.format(group['members']),
+                'short': True
+            }
+        ]
+        return group_fields
     else:
         logger.error('No group info provided')
-
-    return group_fields
+        return []
 
 
 def get_group_info(group_url):
