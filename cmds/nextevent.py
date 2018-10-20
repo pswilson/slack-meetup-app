@@ -26,7 +26,7 @@ def next_group_events(group_url, num_events=1):
     filter_params = {'page': num_events, 'scroll': 'next_upcoming'}
 
     # For Testing
-    # filter_params = {'page': num_events, 'no_earlier_than': '2018-10-20T00:00:00.000'}
+    # filter_params = {'page': num_events, 'no_earlier_than': '2018-11-15T11:00:00.000'}
     # date_range_params = {'no_later_than': '2018-10-21T00:00:00.000'}
 
     request_url = '{}/{}/{}'.format(meetup.api_base, group_url, meetup.events_api_path)
@@ -45,13 +45,18 @@ def next_group_events(group_url, num_events=1):
 # Format a single event
 def format_event(event):
     if event:
+        if 'venue' in event:
+            venue_name = event['venue']['name']
+        else:
+            venue_name = 'TBD'
+
         event_out = {
             'mrkdwn_in': ['text', 'pretext'],
             'pretext': '*Next Meetup:*',
             'title': event['name'],
             'title_link': event['link'],
             'fallback': '{}: {}'.format(event['name'], event['link']),
-            'text': '{}\n*<!date^{}^{{time}} {{date_long}}|{} @{}>* at {}'.format(event['group']['name'], int(event['time']/1000), event['local_date'], event['local_time'], event['venue']['name']),
+            'text': '{}\n*<!date^{}^{{time}} {{date_long}}|{} @{}>* at {}'.format(event['group']['name'], int(event['time']/1000), event['local_date'], event['local_time'], venue_name),
             'fields': [
                 {
                     'title': 'RSVPs',
@@ -116,7 +121,10 @@ def format_next_events(events):
             # group events by venue
             by_venue = {}
             for event in events:
-                venue_id = event['venue']['id']
+                if 'venue' in event:
+                    venue_id = event['venue']['id']
+                else:
+                    venue_id = -1
                 if venue_id not in by_venue:
                     by_venue[venue_id] = []
                 by_venue[venue_id].append(event)
@@ -129,7 +137,12 @@ def format_next_events(events):
                 }
                 total_rsvps = 0
                 # Get the venue name from the first event
-                fmt_text = 'at *{}*'.format(by_venue[venue_id][0]['venue']['name'])
+                if 'venue' in event:
+                    venue_name = event['venue']['name']
+                else:
+                    venue_name = 'TBD'
+
+                fmt_text = 'at *{}*'.format(venue_name)
                 for event in by_venue[venue_id]:
                     fmt_text += '\n{}\n<{}|{}>'.format(event['group']['name'], event['link'], event['name'])
                     total_rsvps += event['yes_rsvp_count']
