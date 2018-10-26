@@ -8,7 +8,7 @@ group_urls = [
     'Frederick-Crypto',
     'Frederick-Infosec',
     'Frederick-Game-Development-Meetup',
-    'function-FrontendMasters',
+    # 'function-FrontendMasters',
     'Frederick-3d-Printing-and-Maker-Tech-Group',
     'Frederick-Innovative-Technology-Center',
     'FSpace',
