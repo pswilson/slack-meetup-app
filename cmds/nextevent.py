@@ -137,6 +137,7 @@ def format_next_events(events):
                 }
                 total_rsvps = 0
                 # Get the venue name from the first event
+                event = by_venue[venue_id][0]
                 if 'venue' in event:
                     venue_name = event['venue']['name']
                 else:
